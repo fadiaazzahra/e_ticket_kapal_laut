@@ -56,7 +56,8 @@
                                     <span class="text-muted small uppercase d-block mb-1">Total Biaya</span>
                                     <strong class="text-success">Rp {{ number_format($p->total_harga, 0, ',', '.') }}</strong>
                                     <div class="small text-muted mt-1">
-                                        {{ $p->jumlah_penumpang }} Penumpang ({{ $p->jenis_kelas }})
+                                        {{ $p->jumlah_penumpang }} Penumpang ({{ $p->jenis_kelas }})<br>
+                                        <span class="text-primary fw-semibold" style="font-size: 0.75rem;">{{ $p->jenis_pengguna }}</span>
                                     </div>
                                 </div>
 

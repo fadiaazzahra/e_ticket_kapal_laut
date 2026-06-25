@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Jadwal;
 use App\Models\Pemesanan;
 use App\Models\Pembayaran;
+use App\Models\Rekening;
+use App\Models\Qris;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
@@ -38,6 +40,7 @@ class BookingController extends Controller
             'nik' => 'required|numeric|digits_between:10,20',
             'no_hp' => 'required|string|max:20',
             'email' => 'required|email|max:255',
+            'jenis_pengguna' => 'required|string|max:255',
             'jenis_kelas' => 'required|string',
             'jumlah_penumpang' => 'required|integer|min:1',
         ], [
@@ -85,6 +88,7 @@ class BookingController extends Controller
             'nik' => $request->nik,
             'no_hp' => $request->no_hp,
             'email' => $request->email,
+            'jenis_pengguna' => $request->jenis_pengguna,
             'jenis_kelas' => $request->jenis_kelas,
             'jumlah_penumpang' => $request->jumlah_penumpang,
             'total_harga' => $totalPrice,
@@ -109,7 +113,10 @@ class BookingController extends Controller
                 ->with('info', 'Pemesanan ini sudah diproses.');
         }
 
-        return view('booking.payment', compact('pemesanan'));
+        $activeBanks = Rekening::where('is_aktif', true)->get();
+        $activeQris = Qris::where('is_aktif', true)->get();
+
+        return view('booking.payment', compact('pemesanan', 'activeBanks', 'activeQris'));
     }
 
     public function submitPayment(Request $request, $id_pemesanan)

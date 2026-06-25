@@ -8,6 +8,8 @@ use App\Models\Kapal;
 use App\Models\Jadwal;
 use App\Models\Pemesanan;
 use App\Models\Pembayaran;
+use App\Models\Rekening;
+use App\Models\Qris;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -331,5 +333,135 @@ class AdminController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    // 8. Kelola Metode Pembayaran
+    public function paymentMethods()
+    {
+        $banks = Rekening::orderBy('nama_bank', 'asc')->get();
+        $qrisList = Qris::orderBy('id', 'desc')->get();
+        return view('admin.payment_methods.index', compact('banks', 'qrisList'));
+    }
+
+    public function storeBank(Request $request)
+    {
+        $request->validate([
+            'nama_bank' => 'required|string|max:255',
+            'nomor_rekening' => 'required|string|max:255',
+            'nama_pemilik' => 'required|string|max:255',
+        ]);
+
+        Rekening::create([
+            'nama_bank' => $request->nama_bank,
+            'nomor_rekening' => $request->nomor_rekening,
+            'nama_pemilik' => $request->nama_pemilik,
+            'is_aktif' => true, // default active when created
+        ]);
+
+        return redirect()->route('admin.payment-methods')->with('success', 'Rekening berhasil ditambahkan!');
+    }
+
+    public function updateBank(Request $request, $id)
+    {
+        $request->validate([
+            'nama_bank' => 'required|string|max:255',
+            'nomor_rekening' => 'required|string|max:255',
+            'nama_pemilik' => 'required|string|max:255',
+        ]);
+
+        $bank = Rekening::findOrFail($id);
+        $bank->update([
+            'nama_bank' => $request->nama_bank,
+            'nomor_rekening' => $request->nomor_rekening,
+            'nama_pemilik' => $request->nama_pemilik,
+        ]);
+
+        return redirect()->route('admin.payment-methods')->with('success', 'Rekening berhasil diperbarui!');
+    }
+
+    public function destroyBank($id)
+    {
+        $bank = Rekening::findOrFail($id);
+        $bank->delete();
+        return redirect()->route('admin.payment-methods')->with('success', 'Rekening berhasil dihapus!');
+    }
+
+    public function toggleBank($id)
+    {
+        $bank = Rekening::findOrFail($id);
+        $bank->update(['is_aktif' => !$bank->is_aktif]);
+        return redirect()->route('admin.payment-methods')->with('success', 'Status rekening berhasil diubah!');
+    }
+
+    public function storeQris(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ], [
+            'image.required' => 'Gambar QRIS wajib diunggah.',
+            'image.max' => 'Ukuran file gambar maksimal 2MB.',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = 'qris_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/qris'), $filename);
+
+            Qris::create([
+                'image_path' => 'uploads/qris/' . $filename,
+                'is_aktif' => true, // default active
+            ]);
+        }
+
+        return redirect()->route('admin.payment-methods')->with('success', 'QRIS baru berhasil ditambahkan!');
+    }
+
+    public function updateQris(Request $request, $id)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ], [
+            'image.required' => 'Gambar QRIS wajib diunggah.',
+            'image.max' => 'Ukuran file gambar maksimal 2MB.',
+        ]);
+
+        $qris = Qris::findOrFail($id);
+
+        if ($request->hasFile('image')) {
+            // Delete old file if it exists
+            if ($qris->image_path && file_exists(public_path($qris->image_path))) {
+                @unlink(public_path($qris->image_path));
+            }
+
+            $file = $request->file('image');
+            $filename = 'qris_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/qris'), $filename);
+
+            $qris->update([
+                'image_path' => 'uploads/qris/' . $filename,
+            ]);
+        }
+
+        return redirect()->route('admin.payment-methods')->with('success', 'Gambar QRIS berhasil diperbarui!');
+    }
+
+    public function destroyQris($id)
+    {
+        $qris = Qris::findOrFail($id);
+        
+        // Delete file
+        if ($qris->image_path && file_exists(public_path($qris->image_path))) {
+            @unlink(public_path($qris->image_path));
+        }
+
+        $qris->delete();
+        return redirect()->route('admin.payment-methods')->with('success', 'QRIS berhasil dihapus!');
+    }
+
+    public function toggleQris($id)
+    {
+        $qris = Qris::findOrFail($id);
+        $qris->update(['is_aktif' => !$qris->is_aktif]);
+        return redirect()->route('admin.payment-methods')->with('success', 'Status QRIS berhasil diubah!');
     }
 }

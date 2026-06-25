@@ -54,6 +54,18 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/pembayarans', [AdminController::class, 'pembayarans'])->name('admin.pembayarans');
     Route::post('/pembayarans/{id_pembayaran}/confirm', [AdminController::class, 'confirmPayment'])->name('admin.pembayarans.confirm');
 
+    // Kelola Metode Pembayaran
+    Route::get('/payment-methods', [AdminController::class, 'paymentMethods'])->name('admin.payment-methods');
+    Route::post('/payment-methods/banks', [AdminController::class, 'storeBank'])->name('admin.payment-methods.banks.store');
+    Route::put('/payment-methods/banks/{id}', [AdminController::class, 'updateBank'])->name('admin.payment-methods.banks.update');
+    Route::delete('/payment-methods/banks/{id}', [AdminController::class, 'destroyBank'])->name('admin.payment-methods.banks.destroy');
+    Route::post('/payment-methods/banks/{id}/toggle', [AdminController::class, 'toggleBank'])->name('admin.payment-methods.banks.toggle');
+
+    Route::post('/payment-methods/qris', [AdminController::class, 'storeQris'])->name('admin.payment-methods.qris.store');
+    Route::put('/payment-methods/qris/{id}', [AdminController::class, 'updateQris'])->name('admin.payment-methods.qris.update');
+    Route::delete('/payment-methods/qris/{id}', [AdminController::class, 'destroyQris'])->name('admin.payment-methods.qris.destroy');
+    Route::post('/payment-methods/qris/{id}/toggle', [AdminController::class, 'toggleQris'])->name('admin.payment-methods.qris.toggle');
+
     // Kelola Pengguna
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
     Route::post('/users', [AdminController::class, 'storeUser'])->name('admin.users.store');

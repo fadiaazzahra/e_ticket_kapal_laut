@@ -66,6 +66,18 @@
                     <input type="hidden" name="id_jadwal" value="{{ $jadwal->id_jadwal }}">
 
                     <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="jenis_pengguna" class="form-label text-muted small fw-bold">Jenis Pengguna</label>
+                            <select name="jenis_pengguna" id="jenis_pengguna" class="form-select form-select-custom" required>
+                                <option value="" disabled selected>Pilih Jenis Pengguna</option>
+                                @foreach(\App\Models\Pemesanan::$jenisPenggunaList as $jenis)
+                                    <option value="{{ $jenis }}" {{ old('jenis_pengguna', request('jenis_pengguna')) == $jenis ? 'selected' : '' }}>{{ $jenis }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="nama_lengkap" class="form-label text-muted small fw-bold">Nama Lengkap Penumpang</label>
                             <input type="text" name="nama_lengkap" id="nama_lengkap" class="form-control form-control-custom" value="{{ old('nama_lengkap', auth()->user()->name) }}" required>

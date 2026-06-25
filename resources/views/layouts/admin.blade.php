@@ -44,6 +44,9 @@
                     <a href="{{ route('admin.pembayarans') }}" class="admin-menu-link {{ Request::routeIs('admin.pembayarans*') ? 'active' : '' }}">
                         <i class="fa-solid fa-money-bill-wave"></i> Kelola Pembayaran
                     </a>
+                    <a href="{{ route('admin.payment-methods') }}" class="admin-menu-link {{ Request::routeIs('admin.payment-methods*') ? 'active' : '' }}">
+                        <i class="fa-solid fa-credit-card"></i> Metode Pembayaran
+                    </a>
                     <a href="{{ route('admin.users') }}" class="admin-menu-link {{ Request::routeIs('admin.users*') ? 'active' : '' }}">
                         <i class="fa-solid fa-user-gear"></i> Kelola Pengguna
                     </a>

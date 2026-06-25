@@ -161,11 +161,11 @@
                     <div class="row mb-3">
                         <div class="col-6">
                             <label for="tanggal" class="form-label fw-bold small text-muted">Tanggal</label>
-                            <input type="date" name="tanggal" id="tanggal" class="form-control form-control-custom" min="{{ date('Y-m-d') }}" required>
+                            <input type="date" name="tanggal" id="tanggal" class="form-control form-control-custom" min="{{ \Carbon\Carbon::now('Asia/Jakarta')->format('Y-m-d') }}" value="{{ \Carbon\Carbon::now('Asia/Jakarta')->format('Y-m-d') }}" required>
                         </div>
                         <div class="col-6">
                             <label for="jam_berangkat" class="form-label fw-bold small text-muted">Jam Berangkat</label>
-                            <input type="time" name="jam_berangkat" id="jam_berangkat" class="form-control form-control-custom" required>
+                            <input type="time" name="jam_berangkat" id="jam_berangkat" class="form-control form-control-custom" value="{{ \Carbon\Carbon::now('Asia/Jakarta')->format('H:i') }}" required>
                         </div>
                     </div>
                     <div class="mb-3">

@@ -26,6 +26,19 @@
                 
                 <form action="{{ route('jadwal') }}" method="GET">
                     <div class="row g-3">
+                        <div class="col-md-12">
+                            <label for="jenis_pengguna" class="form-label text-muted small fw-bold">Jenis Pengguna</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent border-end-0 text-muted"><i class="fa-solid fa-users"></i></span>
+                                <select name="jenis_pengguna" id="jenis_pengguna" class="form-select form-select-custom border-start-0" required>
+                                    <option value="" disabled selected>Pilih Jenis Pengguna</option>
+                                    @foreach(\App\Models\Pemesanan::$jenisPenggunaList as $jenis)
+                                        <option value="{{ $jenis }}">{{ $jenis }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="col-md-3">
                             <label for="asal" class="form-label text-muted small fw-bold">Pelabuhan Asal</label>
                             <div class="input-group">

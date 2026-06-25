@@ -37,6 +37,11 @@
                 </div>
 
                 <div class="mb-3 d-flex justify-content-between">
+                    <span class="text-muted">Jenis Pengguna</span>
+                    <span class="fw-bold text-end">{{ $pemesanan->jenis_pengguna }}</span>
+                </div>
+
+                <div class="mb-3 d-flex justify-content-between">
                     <span class="text-muted">Kelas / Jumlah</span>
                     <span class="fw-bold">{{ $pemesanan->jenis_kelas }} / {{ $pemesanan->jumlah_penumpang }} Orang</span>
                 </div>
@@ -97,10 +102,14 @@
                     <div id="details-bank" class="payment-instruction-panel card border-0 bg-light p-3 mb-4 text-dark">
                         <h6 class="fw-bold mb-2"><i class="fa-solid fa-circle-info me-2 text-primary"></i>Instruksi Transfer Bank</h6>
                         <p class="small mb-3">Silakan transfer nominal pas ke rekening berikut:</p>
-                        <div class="mb-2">
-                            <strong class="text-primary">SeaBank (901086931023)</strong><br>
-                            <span class="small text-muted">A.n Fadia Azzahra</span>
-                        </div>
+                        @forelse($activeBanks as $bank)
+                            <div class="mb-3 pb-2 border-bottom border-secondary-subtle">
+                                <strong class="text-primary">{{ $bank->nama_bank }} ({{ $bank->nomor_rekening }})</strong><br>
+                                <span class="small text-muted">A.n {{ $bank->nama_pemilik }}</span>
+                            </div>
+                        @empty
+                            <div class="text-muted small">Tidak ada rekening transfer bank yang aktif saat ini. Silakan hubungi admin.</div>
+                        @endforelse
                     </div>
 
                     <div id="details-ewallet" class="payment-instruction-panel card border-0 bg-light p-3 mb-4 text-dark d-none">
@@ -116,11 +125,17 @@
                     <div id="details-qris" class="payment-instruction-panel card border-0 bg-light p-3 mb-4 text-dark d-none text-center">
                         <h6 class="fw-bold mb-2"><i class="fa-solid fa-circle-info me-2 text-primary"></i>Instruksi Scan QRIS</h6>
                         <p class="small mb-3">Scan QR Code di bawah menggunakan aplikasi M-Banking atau E-Wallet Anda:</p>
-                        <div class="d-inline-block p-2 bg-white rounded shadow-sm mb-2">
-                            <!-- Dynamic QR Code API -->
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=BahariLines-BookingCode-{{ $pemesanan->kode_booking }}-Total-{{ $pemesanan->total_harga }}" alt="Mock QRIS" class="img-fluid" style="width: 160px; height: 160px;">
+                        <div class="row justify-content-center g-3">
+                            @forelse($activeQris as $q)
+                                <div class="col-md-6 mb-2">
+                                    <div class="d-inline-block p-2 bg-white rounded shadow-sm border">
+                                        <img src="{{ asset($q->image_path) }}" alt="QRIS" class="img-fluid" style="max-height: 220px; object-fit: contain;">
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="text-muted small">Tidak ada QRIS yang aktif saat ini. Silakan hubungi admin.</div>
+                            @endforelse
                         </div>
-                        <div class="small fw-bold">BahariLines QRIS Merchant</div>
                     </div>
 
                     <!-- Receipt Upload -->

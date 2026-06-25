@@ -98,6 +98,10 @@
                                                     <span class="text-muted small d-block">Alamat Email:</span>
                                                     <strong class="text-dark">{{ $p->email }}</strong>
                                                 </div>
+                                                <div class="mb-2">
+                                                    <span class="text-muted small d-block">Jenis Pengguna:</span>
+                                                    <strong class="text-primary">{{ $p->jenis_pengguna }}</strong>
+                                                </div>
 
                                                 <h6 class="fw-bold text-primary mt-4 mb-3"><i class="fa-solid fa-ship me-2"></i>Informasi Pelayaran</h6>
                                                 <div class="mb-2">

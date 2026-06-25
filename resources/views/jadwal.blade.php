@@ -17,6 +17,16 @@
             <div class="card glass-panel border-0 p-4 shadow-sm">
                 <form action="{{ route('jadwal') }}" method="GET">
                     <div class="row g-3">
+                        <div class="col-md-12">
+                            <label for="jenis_pengguna" class="form-label text-muted small fw-bold">Jenis Pengguna</label>
+                            <select name="jenis_pengguna" id="jenis_pengguna" class="form-select form-select-custom" required>
+                                <option value="" disabled selected>Pilih Jenis Pengguna</option>
+                                @foreach(\App\Models\Pemesanan::$jenisPenggunaList as $jenis)
+                                    <option value="{{ $jenis }}" {{ request('jenis_pengguna') == $jenis ? 'selected' : '' }}>{{ $jenis }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <div class="col-md-3">
                             <label for="asal" class="form-label text-muted small fw-bold">Pelabuhan Asal</label>
                             <select name="asal" id="asal" class="form-select form-select-custom">
@@ -99,7 +109,7 @@
                                         Rp {{ number_format($j->harga, 0, ',', '.') }}
                                     </td>
                                     <td class="text-center">
-                                        <a href="{{ route('booking.create') }}?id_jadwal={{ $j->id_jadwal }}" class="btn btn-custom btn-custom-primary py-2 px-3">
+                                        <a href="{{ route('booking.create') }}?id_jadwal={{ $j->id_jadwal }}&jenis_pengguna={{ request('jenis_pengguna') }}" class="btn btn-custom btn-custom-primary py-2 px-3">
                                             <i class="fa-solid fa-cart-shopping me-1"></i> Pesan Tiket
                                         </a>
                                     </td>

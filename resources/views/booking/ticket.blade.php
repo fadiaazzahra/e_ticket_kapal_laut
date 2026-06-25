@@ -53,6 +53,10 @@
                                     <div class="ticket-label">Kelas Tiket</div>
                                     <div class="ticket-value"><span class="badge bg-primary">{{ $pemesanan->jenis_kelas }}</span></div>
                                 </div>
+                                <div class="col-12 ticket-info-row">
+                                    <div class="ticket-label">Jenis Pengguna</div>
+                                    <div class="ticket-value text-dark fw-bold">{{ $pemesanan->jenis_pengguna }}</div>
+                                </div>
                             </div>
 
                             <div class="row">
